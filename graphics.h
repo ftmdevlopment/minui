@@ -41,7 +41,10 @@ typedef struct minui_backend {
 } minui_backend;
 
 minui_backend* open_fbdev();
+
+#ifdef USE_ADF
 minui_backend* open_adf();
+#endif
 
 #ifdef __cplusplus
 }

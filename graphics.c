@@ -369,6 +369,7 @@ int gr_init(void)
         return -1;
     }
 
+#ifdef USE_ADF
     gr_backend = open_adf();
     if (gr_backend) {
         gr_draw = gr_backend->init(gr_backend);
@@ -376,6 +377,7 @@ int gr_init(void)
             gr_backend->exit(gr_backend);
         }
     }
+#endif
 
     if (!gr_draw) {
         gr_backend = open_fbdev();

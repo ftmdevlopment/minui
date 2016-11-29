@@ -1,8 +1,12 @@
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := graphics.c graphics_adf.c graphics_fbdev.c events.c \
+LOCAL_SRC_FILES := graphics.c graphics_fbdev.c events.c \
 	resources.c
+
+ifeq ($(TARGET_USE_ADF),true)
+  LOCAL_SRC_FILES += graphics_adf.c
+endif
 
 $(info "C_ROOT: $(C_ROOT)")
 $(info "LOCAL_PATH: $(LOCAL_PATH)")
@@ -10,13 +14,18 @@ $(info "NDK_PROJECT_PATH: $(LOCAL_PATH)")
 
 ifneq ($(C_ROOT),)
   LOCAL_C_INCLUDES += \
-    $(C_ROOT)/adf/libadf/include \
     $(C_ROOT)/uapi \
     $(C_ROOT)/libpng \
     $(C_ROOT)/zlib
+
+  ifeq ($(TARGET_USE_ADF),true)
+    LOCAL_C_INCLUDES += $(C_ROOT)/adf/libadf
+  endif
 endif
 
-LOCAL_WHOLE_STATIC_LIBRARIES += libadf
+ifeq ($(TARGET_USE_ADF),true)
+  LOCAL_WHOLE_STATIC_LIBRARIES += libadf
+endif
 
 LOCAL_MODULE := libminui
 
