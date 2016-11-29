@@ -4,9 +4,17 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := graphics.c graphics_adf.c graphics_fbdev.c events.c \
 	resources.c
 
-LOCAL_C_INCLUDES +=\
-    external/libpng\
-    external/zlib
+$(info "C_ROOT: $(C_ROOT)")
+$(info "LOCAL_PATH: $(LOCAL_PATH)")
+$(info "NDK_PROJECT_PATH: $(LOCAL_PATH)")
+
+ifneq ($(C_ROOT),)
+  LOCAL_C_INCLUDES += \
+    $(C_ROOT)/adf/libadf/include \
+    $(C_ROOT)/uapi \
+    $(C_ROOT)/libpng \
+    $(C_ROOT)/zlib
+endif
 
 LOCAL_WHOLE_STATIC_LIBRARIES += libadf
 
