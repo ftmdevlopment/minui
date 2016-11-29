@@ -142,7 +142,18 @@ static gr_surface fbdev_init(minui_backend* backend) {
     /* check if we can use double buffering */
     if (vi.yres * fi.line_length * 2 <= fi.smem_len) {
         double_buffered = true;
+    } else {
+        double_buffered = false;
+    }
 
+    /* prefer build option */
+#ifdef USE_DOUBLE_BUFFER
+    double_buffered = true;
+#else  // USE_DOUBLE_BUFFER
+    double_buffered = false;
+#endif // USE_DOUBLE_BUFFER
+
+    if (double_buffered) {
         memcpy(gr_framebuffer+1, gr_framebuffer, sizeof(GRSurface));
         gr_framebuffer[1].data = gr_framebuffer[0].data +
             gr_framebuffer[0].height * gr_framebuffer[0].row_bytes;
@@ -150,7 +161,6 @@ static gr_surface fbdev_init(minui_backend* backend) {
         gr_draw = gr_framebuffer+1;
 
     } else {
-        double_buffered = false;
 
         // Without double-buffering, we allocate RAM for a buffer to
         // draw in, and then "flipping" the buffer consists of a
