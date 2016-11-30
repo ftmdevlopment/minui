@@ -21,6 +21,8 @@
 
 #include <stdbool.h>
 
+#include "log.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := graphics.c graphics_fbdev.c events.c \
-	resources.c
+	resources.c log.c
 
 ifeq ($(TARGET_USE_ADF),true)
   LOCAL_SRC_FILES += graphics_adf.c
