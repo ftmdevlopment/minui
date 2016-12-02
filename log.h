@@ -1,3 +1,6 @@
+#ifndef _LOG_H_
+#define _LOG_H_
+
 enum {
 	VERBOSE,
 	DEBUG,
@@ -16,3 +19,4 @@ int gr_log_print(const char* file, int line, const char* func, int level, const 
 #define gr_warn(fmt, ...) gr_log(   WARN, fmt "\n", ##__VA_ARGS__)
 #define gr_err(fmt, ...)  gr_log(  ERROR, fmt "\n", ##__VA_ARGS__)
 
+#endif  // _LOG_H_
