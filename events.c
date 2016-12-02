@@ -49,6 +49,41 @@ static unsigned ev_count = 0;
 static unsigned ev_dev_count = 0;
 static unsigned ev_misc_count = 0;
 
+static const char* str_ev_bits(unsigned long* bits)
+{
+    int i;
+    static const struct {
+        int value;
+        const char* name;
+    } evs[] = {
+#define N(e) {e, #e}
+        N(EV_SYN),
+        N(EV_KEY),
+        N(EV_REL),
+        N(EV_ABS),
+        N(EV_MSC),
+        N(EV_SW),
+        N(EV_LED),
+        N(EV_SND),
+        N(EV_REP),
+        N(EV_FF),
+        N(EV_PWR),
+        N(EV_FF_STATUS),
+#undef  N
+    };
+    static char buffer[(EV_MAX+1) * 16];
+    int count = 0;
+
+    buffer[0] = '\0';
+    for (i = 0; i < sizeof(evs)/sizeof(evs[0]); i++) {
+        if (test_bit(evs[i].value, bits)) {
+            count += snprintf(&buffer[count], sizeof(buffer) - count, "%s|", evs[i].name);
+        }
+    }
+    if (count) buffer[count-1] = '\0';
+    return buffer;
+}
+
 int ev_init(ev_callback input_cb, void *data)
 {
     DIR *dir;
@@ -77,13 +112,15 @@ int ev_init(ev_callback input_cb, void *data)
                 continue;
             }
 
+            gr_dbg("%s ev_bits = %s", de->d_name, str_ev_bits(ev_bits));
             /* TODO: add ability to specify event masks. For now, just assume
              * that only EV_KEY and EV_REL event types are ever needed. */
-            if (!test_bit(EV_KEY, ev_bits) && !test_bit(EV_REL, ev_bits)) {
+            if (!test_bit(EV_KEY, ev_bits) && !test_bit(EV_REL, ev_bits) && !test_bit(EV_ABS, ev_bits)) {
                 close(fd);
                 continue;
             }
 
+            gr_dbg("monitor %s", de->d_name);
             ev.events = EPOLLIN | EPOLLWAKEUP;
             ev.data.ptr = (void *)&ev_fdinfo[ev_count];
             if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev)) {
