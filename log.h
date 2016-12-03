@@ -1,6 +1,10 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum {
 	VERBOSE,
 	DEBUG,
@@ -18,5 +22,9 @@ int gr_log_print(const char* file, int line, const char* func, int level, const 
 #define gr_info(fmt, ...) gr_log(   INFO, fmt "\n", ##__VA_ARGS__)
 #define gr_warn(fmt, ...) gr_log(   WARN, fmt "\n", ##__VA_ARGS__)
 #define gr_err(fmt, ...)  gr_log(  ERROR, fmt "\n", ##__VA_ARGS__)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // _LOG_H_
