@@ -50,7 +50,11 @@ static int open_png(const char* name, png_structp* png_ptr, png_infop* info_ptr,
     unsigned char header[8];
     int result = 0;
 
+#ifdef RESOURCE_PATH
+    snprintf(resPath, sizeof(resPath)-1, RESOURCE_PATH "%s.png", name);
+#else  // RESOURCE_PATH
     snprintf(resPath, sizeof(resPath)-1, "/res/images/%s.png", name);
+#endif  // RESOURCE_PATH
     resPath[sizeof(resPath)-1] = '\0';
     FILE* fp = fopen(resPath, "rb");
     if (fp == NULL) {
